@@ -4,9 +4,10 @@ import type { FormEvent } from "react";
 interface SearchBarProps {
   onSearch: (query: string) => void;
   initialValue?: string;
+  compact?: boolean;
 }
 
-export default function SearchBar({ onSearch, initialValue = "" }: SearchBarProps) {
+export default function SearchBar({ onSearch, initialValue = "", compact = false }: SearchBarProps) {
   const [value, setValue] = useState(initialValue);
 
   function handleSubmit(event: FormEvent) {
@@ -18,14 +19,18 @@ export default function SearchBar({ onSearch, initialValue = "" }: SearchBarProp
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-2xl">
+    <form onSubmit={handleSubmit} className={compact ? "w-full max-w-md" : "w-full max-w-2xl"}>
       <input
         type="text"
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        placeholder="Search the web"
-        autoFocus
-        className="w-full rounded-full border border-neutral-300 px-6 py-3 text-lg shadow-sm outline-none focus:border-neutral-500"
+        placeholder="search something"
+        autoFocus={!compact}
+        className={
+          compact
+            ? "w-full rounded-full border border-slate-200 bg-white px-5 py-2 text-sm text-slate-700 shadow-sm outline-none transition-shadow duration-150 placeholder:text-slate-300 focus:border-[#2a3ce4] focus:ring-4 focus:ring-[#2a3ce4]/10"
+            : "w-full rounded-full border border-slate-200 bg-white px-6 py-3 text-lg text-slate-700 shadow-sm outline-none transition-shadow duration-150 placeholder:text-slate-300 focus:border-[#2a3ce4] focus:ring-4 focus:ring-[#2a3ce4]/10"
+        }
       />
     </form>
   );

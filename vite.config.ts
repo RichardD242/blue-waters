@@ -9,13 +9,12 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     server: {
       proxy: {
-        "/api/brave": {
-          target: "https://api.search.brave.com/res/v1/web",
+        "/api/tavily": {
+          target: "https://api.tavily.com",
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/brave/, ""),
+          rewrite: (path) => path.replace(/^\/api\/tavily/, ""),
           headers: {
-            "X-Subscription-Token": env.BRAVE_API_KEY ?? "",
-            Accept: "application/json",
+            Authorization: `Bearer ${env.TAVILY_API_KEY ?? ""}`,
           },
         },
       },

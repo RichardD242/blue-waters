@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: color-mix(in srgb, #2a3ce4 25%, transparent);
+}
