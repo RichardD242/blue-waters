@@ -7,15 +7,15 @@ interface BookmarksPanelProps {
 
 export default function BookmarksPanel({ bookmarks, onRemove }: BookmarksPanelProps) {
   return (
-    <div className="w-full max-w-2xl border-b border-slate-100 bg-slate-50 px-4 py-6">
+    <div className="w-full max-w-2xl border-b border-slate-100 bg-slate-50 px-4 py-6 dark:border-slate-800 dark:bg-slate-800/60">
       {bookmarks.length === 0 ? (
-        <p className="text-sm text-slate-400">nothing saved yet star a result to keep it here</p>
+        <p className="text-sm text-slate-400 dark:text-slate-500">nothing saved yet star a result to keep it here</p>
       ) : (
         <ul className="space-y-1">
           {bookmarks.map((bookmark) => (
             <li
               key={bookmark.url}
-              className="flex items-start justify-between gap-4 rounded-2xl px-3 py-3 transition-colors duration-150 hover:bg-white"
+              className="flex items-start justify-between gap-4 rounded-2xl px-3 py-3 transition-colors duration-150 hover:bg-white dark:hover:bg-slate-900"
             >
               <div>
                 <a
@@ -26,12 +26,12 @@ export default function BookmarksPanel({ bookmarks, onRemove }: BookmarksPanelPr
                 >
                   {bookmark.title}
                 </a>
-                <p className="text-sm text-slate-400">{bookmark.url}</p>
+                <p className="text-sm text-slate-400 dark:text-slate-500">{bookmark.url}</p>
               </div>
               <button
                 type="button"
                 onClick={() => onRemove(bookmark)}
-                className="shrink-0 text-sm text-slate-300 transition-colors duration-150 hover:text-[#2a3ce4]"
+                className="shrink-0 text-sm text-slate-300 transition-colors duration-150 hover:text-[#2a3ce4] dark:text-slate-600"
               >
                 remove
               </button>

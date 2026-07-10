@@ -14,6 +14,28 @@ function snippet(description: string): string {
   return clean.length > SNIPPET_LENGTH ? `${clean.slice(0, SNIPPET_LENGTH).trimEnd()}…` : clean;
 }
 
+function hostname(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+function breadcrumb(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const segments = parsed.pathname.split("/").filter(Boolean);
+    return [parsed.hostname.replace(/^www\./, ""), ...segments].join(" › ");
+  } catch {
+    return url;
+  }
+}
+
+function favicon(url: string): string {
+  return `https://icons.duckduckgo.com/ip3/${hostname(url)}.ico`;
+}
+
 export default function ResultsList({ results, isBookmarked, onToggleBookmark }: ResultsListProps) {
   if (results.length === 0) {
     return null;
@@ -24,9 +46,13 @@ export default function ResultsList({ results, isBookmarked, onToggleBookmark }:
       {results.map((result) => (
         <li
           key={result.url}
-          className="flex items-start justify-between gap-4 rounded-2xl px-3 py-3 transition-colors duration-150 hover:bg-slate-50"
+          className="flex items-start justify-between gap-4 rounded-2xl px-3 py-3 transition-colors duration-150 hover:bg-slate-50 dark:hover:bg-slate-800"
         >
           <div>
+            <div className="flex items-center gap-2">
+              <img src={favicon(result.url)} alt="" className="h-4 w-4 rounded-sm" />
+              <p className="text-sm text-slate-500 dark:text-slate-400">{breadcrumb(result.url)}</p>
+            </div>
             <a
               href={result.url}
               target="_blank"
@@ -35,8 +61,7 @@ export default function ResultsList({ results, isBookmarked, onToggleBookmark }:
             >
               {result.title}
             </a>
-            <p className="text-sm text-slate-400">{result.url}</p>
-            <p className="mt-1 text-slate-500">{snippet(result.description)}</p>
+            <p className="mt-1 text-slate-500 dark:text-slate-400">{snippet(result.description)}</p>
           </div>
           <button
             type="button"
@@ -45,7 +70,7 @@ export default function ResultsList({ results, isBookmarked, onToggleBookmark }:
             className={
               isBookmarked(result.url)
                 ? "shrink-0 text-[#2a3ce4] transition-colors duration-150"
-                : "shrink-0 text-slate-200 transition-colors duration-150 hover:text-[#2a3ce4]"
+                : "shrink-0 text-slate-200 transition-colors duration-150 hover:text-[#2a3ce4] dark:text-slate-700"
             }
           >
             <Star size={20} fill={isBookmarked(result.url) ? "currentColor" : "none"} />
