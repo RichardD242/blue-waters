@@ -27,6 +27,7 @@ the free plan gives 1000 credits a day and each basic search costs 1 credit so s
 
 # how to use
 
+(every demo user only gets 5 searches)
 - go to [blue waters]()
 
 # motivation
