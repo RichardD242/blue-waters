@@ -11,6 +11,8 @@ function createTab(mode: TabMode = "home"): Tab {
         title: "new tab",
         query: "",
         url: "",
+        results: null,
+        elapsedMs: 0,
     };
 }
 
@@ -21,15 +23,9 @@ function readTabs(): Tab[] {
     }
     try {
         const parsed = JSON.parse(raw) as Tab[];
-        return parsed.length > 0 ? parsed : [createTab()];
+        const normalized = parsed.map((tab) => ({ ...tab, results: tab.results ?? null, elapsedMs: tab.elapsedMs ?? 0 }));
+        return normalized.length > 0 ? normalized : [createTab()];
     } catch {
-        return [createTab()];
-    }
-}
-
-function readTabsActive(): Tab[] {
-    const raw = localStorage.getItem(TABS_KEY);
-    if (!raw) {
         return [createTab()];
     }
 }
