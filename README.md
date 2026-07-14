@@ -35,4 +35,4 @@ Blue Waters is my very own search engine, the goal is to make it very personal t
 
 ## preview
 
-![Blue Waters Preview](/public/bluewaters-banner.png)
+![Blue Waters Preview](/public/bluewaters-preview.png)
