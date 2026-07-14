@@ -7,7 +7,7 @@ import HomeView from "../views/HomeView.tsx";
 import SearchView from "../views/SearchView.tsx";
 import HistoryView from "../views/HistoryView.tsx";
 import { useTabs } from "../hooks/useTabs.ts";
-import { useDarkMode } from "../hooks/useDarkMode.ts";
+import type { DarkModeControls } from "../hooks/useDarkMode.ts";
 import { useSearchHistory } from "../hooks/useSearchHistory.ts";
 import { hostnameOf } from "../utils/url.ts";
 import { getCachedSearch, setCachedSearch } from "../utils/searchCache.ts";
@@ -17,11 +17,14 @@ import type { LockControls } from "../hooks/useLock.ts";
 
 interface BrowserShellProps {
   lock: LockControls;
+  name: string;
+  dark: DarkModeControls;
+  onClearName: () => void;
 }
 
-export default function BrowserShell({ lock }: BrowserShellProps) {
+export default function BrowserShell({ lock, name, dark: darkMode, onClearName }: BrowserShellProps) {
   const { tabs, activeTab, openTab, closeTab, setActiveId, updateTab } = useTabs();
-  const { dark, toggle } = useDarkMode();
+  const { dark, toggle } = darkMode;
   const { history } = useSearchHistory();
 
   useEffect(() => {
@@ -100,7 +103,15 @@ export default function BrowserShell({ lock }: BrowserShellProps) {
         </div>
       </div>
       {activeTab.mode === "home" && (
-        <HomeView dark={dark} onToggleDark={toggle} onSearch={runSearch} lock={lock} isPrivate={activeTab.private} />
+        <HomeView
+          dark={dark}
+          onToggleDark={toggle}
+          onSearch={runSearch}
+          lock={lock}
+          isPrivate={activeTab.private}
+          name={name}
+          onClearName={onClearName}
+        />
       )}
       {activeTab.mode === "search" && <SearchView tab={activeTab} onResults={saveResults} />}
       {activeTab.mode === "history" && <HistoryView onSearch={runSearch} />}

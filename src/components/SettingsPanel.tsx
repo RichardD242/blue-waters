@@ -1,15 +1,16 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Lock, LockOpen, Moon, Settings, Sun } from "lucide-react";
+import { Lock, LockOpen, Moon, Settings, Sun, UserX } from "lucide-react";
 import type { LockControls } from "../hooks/useLock.ts";
 
 interface SettingsPanelProps {
   dark: boolean;
   onToggleDark: () => void;
   lock: LockControls;
+  onClearName: () => void;
 }
 
-export default function SettingsPanel({ dark, onToggleDark, lock }: SettingsPanelProps) {
+export default function SettingsPanel({ dark, onToggleDark, lock, onClearName }: SettingsPanelProps) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [pin, setPin] = useState("");
@@ -69,6 +70,15 @@ export default function SettingsPanel({ dark, onToggleDark, lock }: SettingsPane
                 }
               />
             </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onClearName}
+            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700"
+          >
+            <UserX size={16} />
+            forget my name
           </button>
 
           {!lock.hasPasscode && !editing && (

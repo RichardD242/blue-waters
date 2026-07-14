@@ -10,7 +10,12 @@ function readInitial(): boolean {
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 
-export function useDarkMode() {
+export interface DarkModeControls {
+  dark: boolean;
+  toggle: () => void;
+}
+
+export function useDarkMode(): DarkModeControls {
   const [dark, setDark] = useState(() => readInitial());
 
   useEffect(() => {

@@ -8,11 +8,20 @@ interface HomeViewProps {
   onSearch: (query: string) => void;
   lock: LockControls;
   isPrivate: boolean;
+  name: string;
+  onClearName: () => void;
 }
 
 const GITHUB_URL = "https://github.com/RichardD242/blue-waters";
 
-export default function HomeView({ dark, onToggleDark, onSearch, lock, isPrivate }: HomeViewProps) {
+function greeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "good morning";
+  if (hour < 18) return "good afternoon";
+  return "good evening";
+}
+
+export default function HomeView({ dark, onToggleDark, onSearch, lock, isPrivate, name, onClearName }: HomeViewProps) {
   function focusSearch() {
     document.getElementById("search-input")?.focus();
   }
@@ -27,18 +36,25 @@ export default function HomeView({ dark, onToggleDark, onSearch, lock, isPrivate
           search
         </button>
       </nav>
-      <SettingsPanel dark={dark} onToggleDark={onToggleDark} lock={lock} />
-      <div className="flex items-center gap-5">
-        <img src="/bluewaterslogo.png" alt="" className="h-44 w-44" />
-        <span className="font-serif text-9xl text-[#2a3ce4]">
-          {isPrivate ? (
-            <>
-              <span className="underline">Private</span> Waters
-            </>
-          ) : (
-            "Blue Waters"
-          )}
-        </span>
+      <SettingsPanel dark={dark} onToggleDark={onToggleDark} lock={lock} onClearName={onClearName} />
+      <div className="flex flex-col items-center gap-5">
+        {!isPrivate && (
+          <p className="text-lg text-slate-400 dark:text-slate-500">
+            {greeting()}, {name}
+          </p>
+        )}
+        <div className="flex items-center gap-5">
+          <img src="/bluewaterslogo.png" alt="" className="h-44 w-44" />
+          <span className="font-serif text-9xl text-[#2a3ce4]">
+            {isPrivate ? (
+              <>
+                <span className="underline">Private</span> Waters
+              </>
+            ) : (
+              "Blue Waters"
+            )}
+          </span>
+        </div>
       </div>
       <p className="-mt-10 text-lg text-slate-400 dark:text-slate-500">the best low cortisol search engine</p>
       <SearchBar onSearch={onSearch} />
