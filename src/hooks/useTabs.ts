@@ -3,9 +3,8 @@ import type { Tab, TabMode } from "../types.ts";
 
 const TABS_KEY = "bluewaters:tabs";
 const ACTIVE_KEY = "bluewaters:active-tab";
-export const MAX_TABS = 8;
 
-function createTab(mode: TabMode = "home"): Tab {
+function createTab(mode: TabMode = "home", isPrivate = false): Tab {
     return {
         id: crypto.randomUUID(),
         mode,
@@ -14,6 +13,7 @@ function createTab(mode: TabMode = "home"): Tab {
         url: "",
         results: null,
         elapsedMs: 0,
+        private: isPrivate,
     };
 }
 
@@ -24,7 +24,12 @@ function readTabs(): Tab[] {
     }
     try {
         const parsed = JSON.parse(raw) as Tab[];
-        const normalized = parsed.map((tab) => ({ ...tab, results: tab.results ?? null, elapsedMs: tab.elapsedMs ?? 0 }));
+        const normalized = parsed.map((tab) => ({
+            ...tab,
+            results: tab.results ?? null,
+            elapsedMs: tab.elapsedMs ?? 0,
+            private: tab.private ?? false,
+        }));
         return normalized.length > 0 ? normalized : [createTab()];
     } catch {
         return [createTab()];
@@ -41,22 +46,21 @@ export function useTabs() {
     const [activeId, setActiveId] = useState<string>(() => readActiveId(tabs));
 
     useEffect(() => {
-        localStorage.setItem(TABS_KEY, JSON.stringify(tabs));
+        const persisted = tabs.filter((tab) => !tab.private);
+        localStorage.setItem(TABS_KEY, JSON.stringify(persisted));
     }, [tabs]);
 
     useEffect(() => {
         localStorage.setItem(ACTIVE_KEY, activeId);
     }, [activeId]);
 
-    function openTab(mode: TabMode = "home") {
-        if (tabs.length >= MAX_TABS) {
-            return activeId;
-        }
-        const tab = createTab(mode);
+    function openTab(mode: TabMode = "home", isPrivate = false) {
+        const tab = createTab(mode, isPrivate);
         setTabs((current) => [...current, tab]);
         setActiveId(tab.id);
         return tab.id;
     }
+
     function closeTab(id: string) {
         setTabs((current) => {
             const next = current.filter((tab) => tab.id !== id);
@@ -66,7 +70,7 @@ export function useTabs() {
                 return [fallback];
             }
             if (id === activeId) {
-                setActiveId(next[next.length -1].id);
+                setActiveId(next[next.length - 1].id);
             }
             return next;
         });
@@ -80,4 +84,3 @@ export function useTabs() {
 
     return { tabs, activeTab, openTab, closeTab, setActiveId, updateTab };
 }
-

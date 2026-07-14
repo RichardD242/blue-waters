@@ -10,4 +10,5 @@ export interface Tab {
     url: string;
     results: SearchResult[] | null;
     elapsedMs: number;
+    private: boolean;
 }

@@ -14,7 +14,7 @@ interface SearchViewProps {
 }
 
 export default function SearchView({ tab, onResults }: SearchViewProps) {
-  const [status, setStatus] = useState<"idle" | "loading" | "error">(tab.results ? "idle" : "loading");
+  const [status, setStatus] = useState<"idle" | "loading" | "error" | "limited">(tab.results ? "idle" : "loading");
   const [bookmarksOpen, setBookmarksOpen] = useState(false);
 
   const { bookmarks, isBookmarked, toggleBookmark } = useBookmarks();
@@ -26,7 +26,9 @@ export default function SearchView({ tab, onResults }: SearchViewProps) {
       return;
     }
 
-    addEntry(tab.query);
+    if (!tab.private) {
+      addEntry(tab.query);
+    }
     setStatus("loading");
     const startedAt = performance.now();
     const controller = new AbortController();
@@ -74,6 +76,7 @@ export default function SearchView({ tab, onResults }: SearchViewProps) {
           something went wrong check the tavily api key and try again
         </p>
       )}
+      {status === "limited" && <p className="pt-10 text-slate-400 dark:text-slate-500">out of credits</p>}
       {status === "idle" && results.length > 0 && (
         <p className="w-full max-w-2xl px-4 pt-6 text-sm text-slate-400 dark:text-slate-500">
           about {results.length} results ({(tab.elapsedMs / 1000).toFixed(2)} seconds)

@@ -15,3 +15,5 @@ settings: with darkmode
 maybe extenstion like built in for trolling or something themes and so on
 
 suggestions while typing without api cost filtering from history clientside
+
+incognito mode but call it something else

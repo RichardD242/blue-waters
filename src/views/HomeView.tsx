@@ -7,11 +7,12 @@ interface HomeViewProps {
   onToggleDark: () => void;
   onSearch: (query: string) => void;
   lock: LockControls;
+  isPrivate: boolean;
 }
 
 const GITHUB_URL = "https://github.com/RichardD242/blue-waters";
 
-export default function HomeView({ dark, onToggleDark, onSearch, lock }: HomeViewProps) {
+export default function HomeView({ dark, onToggleDark, onSearch, lock, isPrivate }: HomeViewProps) {
   function focusSearch() {
     document.getElementById("search-input")?.focus();
   }
@@ -29,7 +30,15 @@ export default function HomeView({ dark, onToggleDark, onSearch, lock }: HomeVie
       <SettingsPanel dark={dark} onToggleDark={onToggleDark} lock={lock} />
       <div className="flex items-center gap-5">
         <img src="/bluewaterslogo.png" alt="" className="h-44 w-44" />
-        <span className="font-serif text-9xl text-[#2a3ce4]">Blue Waters</span>
+        <span className="font-serif text-9xl text-[#2a3ce4]">
+          {isPrivate ? (
+            <>
+              <span className="underline">Private</span> Waters
+            </>
+          ) : (
+            "Blue Waters"
+          )}
+        </span>
       </div>
       <p className="-mt-10 text-lg text-slate-400 dark:text-slate-500">the best low cortisol search engine</p>
       <SearchBar onSearch={onSearch} />
