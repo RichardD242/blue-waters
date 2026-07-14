@@ -29,6 +29,8 @@ the free plan gives 1000 credits a day and each basic search costs 1 credit so s
 
 - go to [blue waters](https://blue-waters-i1tcy5d1a-richardd242s-projects.vercel.app/)
 
+- play around in the browser and try out all feature
+
 # motivation
 
 Blue Waters is my very own search engine, the goal is to make it very personal to me and fix my problems with regular browsers
