@@ -13,8 +13,13 @@ import { hostnameOf } from "../utils/url.ts";
 import { getCachedSearch, setCachedSearch } from "../utils/searchCache.ts";
 import type { SearchResult } from "../api/tavilySearch.ts";
 import type { Tab } from "../types.ts";
+import type { LockControls } from "../hooks/useLock.ts";
 
-export default function BrowserShell() {
+interface BrowserShellProps {
+  lock: LockControls;
+}
+
+export default function BrowserShell({ lock }: BrowserShellProps) {
   const { tabs, activeTab, openTab, closeTab, setActiveId, updateTab } = useTabs();
   const { dark, toggle } = useDarkMode();
   const { history } = useSearchHistory();
@@ -77,7 +82,7 @@ export default function BrowserShell() {
           <History size={16} />
         </button>
       </div>
-      {activeTab.mode === "home" && <HomeView dark={dark} onToggleDark={toggle} onSearch={runSearch} />}
+      {activeTab.mode === "home" && <HomeView dark={dark} onToggleDark={toggle} onSearch={runSearch} lock={lock} />}
       {activeTab.mode === "search" && <SearchView tab={activeTab} onResults={saveResults} />}
       {activeTab.mode === "history" && <HistoryView onSearch={runSearch} />}
       {activeTab.mode === "site" && <SiteFrame url={activeTab.url} />}

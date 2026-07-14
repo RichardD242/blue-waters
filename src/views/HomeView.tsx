@@ -1,18 +1,17 @@
 import SearchBar from "../components/SearchBar.tsx";
 import SettingsPanel from "../components/SettingsPanel.tsx";
-import { useSearchLimit } from "../hooks/useSearchLimit.ts";
+import type { LockControls } from "../hooks/useLock.ts";
 
 interface HomeViewProps {
   dark: boolean;
   onToggleDark: () => void;
   onSearch: (query: string) => void;
+  lock: LockControls;
 }
 
 const GITHUB_URL = "https://github.com/RichardD242/blue-waters";
 
-export default function HomeView({ dark, onToggleDark, onSearch }: HomeViewProps) {
-  const { remaining, limit } = useSearchLimit();
-
+export default function HomeView({ dark, onToggleDark, onSearch, lock }: HomeViewProps) {
   function focusSearch() {
     document.getElementById("search-input")?.focus();
   }
@@ -27,16 +26,13 @@ export default function HomeView({ dark, onToggleDark, onSearch }: HomeViewProps
           search
         </button>
       </nav>
-      <SettingsPanel dark={dark} onToggleDark={onToggleDark} />
+      <SettingsPanel dark={dark} onToggleDark={onToggleDark} lock={lock} />
       <div className="flex items-center gap-5">
         <img src="/bluewaterslogo.png" alt="" className="h-44 w-44" />
         <span className="font-serif text-9xl text-[#2a3ce4]">Blue Waters</span>
       </div>
       <p className="-mt-10 text-lg text-slate-400 dark:text-slate-500">the best low cortisol search engine</p>
       <SearchBar onSearch={onSearch} />
-      <p className="text-sm text-slate-300 dark:text-slate-600">
-        {remaining} of {limit} searches left today
-      </p>
     </main>
   );
 }

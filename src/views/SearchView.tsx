@@ -6,7 +6,6 @@ import { search } from "../api/tavilySearch.ts";
 import type { SearchResult } from "../api/tavilySearch.ts";
 import type { Tab } from "../types.ts";
 import { useBookmarks } from "../hooks/useBookmarks.ts";
-import { useSearchLimit } from "../hooks/useSearchLimit.ts";
 import { useSearchHistory } from "../hooks/useSearchHistory.ts";
 
 interface SearchViewProps {
@@ -15,21 +14,15 @@ interface SearchViewProps {
 }
 
 export default function SearchView({ tab, onResults }: SearchViewProps) {
-  const [status, setStatus] = useState<"idle" | "loading" | "error" | "limited">(tab.results ? "idle" : "loading");
+  const [status, setStatus] = useState<"idle" | "loading" | "error">(tab.results ? "idle" : "loading");
   const [bookmarksOpen, setBookmarksOpen] = useState(false);
 
   const { bookmarks, isBookmarked, toggleBookmark } = useBookmarks();
-  const { useSearch } = useSearchLimit();
   const { addEntry } = useSearchHistory();
 
   useEffect(() => {
     if (tab.results !== null) {
       setStatus("idle");
-      return;
-    }
-
-    if (!useSearch()) {
-      setStatus("limited");
       return;
     }
 
@@ -81,7 +74,6 @@ export default function SearchView({ tab, onResults }: SearchViewProps) {
           something went wrong check the tavily api key and try again
         </p>
       )}
-      {status === "limited" && <p className="pt-10 text-slate-400 dark:text-slate-500">out of credits</p>}
       {status === "idle" && results.length > 0 && (
         <p className="w-full max-w-2xl px-4 pt-6 text-sm text-slate-400 dark:text-slate-500">
           about {results.length} results ({(tab.elapsedMs / 1000).toFixed(2)} seconds)
