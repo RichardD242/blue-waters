@@ -8,11 +8,17 @@ interface HistoryViewProps {
 export default function HistoryView({ onSearch }: HistoryViewProps) {
   const { history, clearHistory } = useSearchHistory();
 
+  function handleClear() {
+    if (window.confirm("delete all search history?")) {
+      clearHistory();
+    }
+  }
+
   return (
     <main className="flex flex-1 flex-col items-center gap-10 bg-white px-4 py-16 dark:bg-slate-900">
       <button
         type="button"
-        onClick={clearHistory}
+        onClick={handleClear}
         className="flex items-center gap-2 rounded-full bg-red-600 px-10 py-4 text-lg font-semibold text-white shadow-sm transition-colors duration-150 hover:bg-red-700"
       >
         <Trash2 size={20} />

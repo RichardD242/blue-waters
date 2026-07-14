@@ -1,4 +1,5 @@
-import { Star } from "lucide-react";
+import { useState } from "react";
+import { Check, Copy, Star } from "lucide-react";
 import type { SearchResult } from "../api/tavilySearch.ts";
 
 interface ResultsListProps {
@@ -37,8 +38,17 @@ function favicon(url: string): string {
 }
 
 export default function ResultsList({ results, isBookmarked, onToggleBookmark }: ResultsListProps) {
+
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+
   if (results.length === 0) {
     return null;
+  }
+
+  async function handleCopy(url: string) {
+    await navigator.clipboard.writeText(url);
+    setCopiedUrl(url);
+    setTimeout(() => setCopiedUrl((current) => (current === url ? null : current)), 1500);
   }
 
   return (
@@ -63,18 +73,28 @@ export default function ResultsList({ results, isBookmarked, onToggleBookmark }:
             </a>
             <p className="mt-1 text-slate-500 dark:text-slate-400">{snippet(result.description)}</p>
           </div>
-          <button
-            type="button"
-            onClick={() => onToggleBookmark(result)}
-            aria-label={isBookmarked(result.url) ? "remove bookmark" : "save bookmark"}
-            className={
-              isBookmarked(result.url)
-                ? "shrink-0 text-[#2a3ce4] transition-colors duration-150"
-                : "shrink-0 text-slate-200 transition-colors duration-150 hover:text-[#2a3ce4] dark:text-slate-700"
-            }
-          >
-            <Star size={20} fill={isBookmarked(result.url) ? "currentColor" : "none"} />
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={() => handleCopy(result.url)}
+              aria-label="copy link"
+              className="text-slate-200 transition-colors duration-150 hover:text-[#2a3ce4] dark:text-slate-700"
+            >
+              {copiedUrl === result.url ? <Check size={18} /> : <Copy size={18} />}
+            </button>
+            <button
+              type="button"
+              onClick={() => onToggleBookmark(result)}
+              aria-label={isBookmarked(result.url) ? "remove bookmark" : "save bookmark"}
+              className={
+                isBookmarked(result.url)
+                  ? "text-[#2a3ce4] transition-colors duration-150"
+                  : "text-slate-200 transition-colors duration-150 hover:text-[#2a3ce4] dark:text-slate-700"
+              }
+            >
+              <Star size={20} fill={isBookmarked(result.url) ? "currentColor" : "none"} />
+            </button>
+          </div>
         </li>
       ))}
     </ul>
