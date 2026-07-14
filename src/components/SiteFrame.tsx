@@ -28,7 +28,14 @@ export default function SiteFrame({ url }: SiteFrameProps) {
           </a>
         </div>
       )}
-      <iframe src={url} title={url} className="w-full flex-1 border-0" onLoad={() => setSlow(false)} />
+      <iframe
+        src={url}
+        title={url}
+        className="w-full flex-1 border-0"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+        referrerPolicy="no-referrer"
+        onLoad={() => setSlow(false)}
+      />
     </div>
   );
 }
