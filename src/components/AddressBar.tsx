@@ -125,6 +125,7 @@ export default function AddressBar({ value, history, onSearch, onVisit }: Addres
               setHighlighted(0);
               setOpen(true);
             }}
+            onFocus={(event) => event.target.select()}
             onKeyDown={handleKeyDown}
             placeholder="search or enter website"
             className="w-full rounded-full border border-slate-200 bg-white py-2.5 pl-10 pr-5 text-sm text-slate-700 shadow-sm outline-none transition-shadow duration-150 placeholder:text-slate-300 focus:border-[#2a3ce4] focus:ring-4 focus:ring-[#2a3ce4]/10 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
