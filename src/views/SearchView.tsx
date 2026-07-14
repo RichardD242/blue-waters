@@ -11,7 +11,7 @@ import { useSearchHistory } from "../hooks/useSearchHistory.ts";
 
 interface SearchViewProps {
   tab: Tab;
-  onResults: (results: SearchResult[], elapsedMs: number) => void;
+  onResults: (tab: Tab, results: SearchResult[], elapsedMs: number) => void;
 }
 
 export default function SearchView({ tab, onResults }: SearchViewProps) {
@@ -38,7 +38,7 @@ export default function SearchView({ tab, onResults }: SearchViewProps) {
     const startedAt = performance.now();
     search(tab.query)
       .then((results) => {
-        onResults(results, performance.now() - startedAt);
+        onResults(tab, results, performance.now() - startedAt);
         setStatus("idle");
       })
       .catch(() => setStatus("error"));

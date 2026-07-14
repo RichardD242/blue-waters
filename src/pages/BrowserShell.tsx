@@ -10,7 +10,9 @@ import { useTabs } from "../hooks/useTabs.ts";
 import { useDarkMode } from "../hooks/useDarkMode.ts";
 import { useSearchHistory } from "../hooks/useSearchHistory.ts";
 import { hostnameOf } from "../utils/url.ts";
+import { getCachedSearch, setCachedSearch } from "../utils/searchCache.ts";
 import type { SearchResult } from "../api/tavilySearch.ts";
+import type { Tab } from "../types.ts";
 
 export default function BrowserShell() {
   const { tabs, activeTab, openTab, closeTab, setActiveId, updateTab } = useTabs();
@@ -22,18 +24,23 @@ export default function BrowserShell() {
   }, [activeTab.title]);
 
   function runSearch(query: string) {
-    const isSameSearch = activeTab.mode === "search" && activeTab.query === query;
+    if (activeTab.mode === "search" && activeTab.query === query) {
+      return;
+    }
+    const cached = getCachedSearch(query);
     updateTab(activeTab.id, {
       mode: "search",
       query,
       url: "",
       title: query,
-      ...(isSameSearch ? {} : { results: null, elapsedMs: 0 }),
+      results: cached ? cached.results : null,
+      elapsedMs: cached ? cached.elapsedMs : 0,
     });
   }
 
-  function saveResults(results: SearchResult[], elapsedMs: number) {
-    updateTab(activeTab.id, { results, elapsedMs });
+  function saveResults(tab: Tab, results: SearchResult[], elapsedMs: number) {
+    updateTab(tab.id, { results, elapsedMs });
+    setCachedSearch(tab.query, results, elapsedMs);
   }
 
   function runVisit(url: string) {
