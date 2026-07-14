@@ -36,13 +36,20 @@ export default function SearchView({ tab, onResults }: SearchViewProps) {
     addEntry(tab.query);
     setStatus("loading");
     const startedAt = performance.now();
-    search(tab.query)
+    const controller = new AbortController();
+
+    search(tab.query, controller.signal)
       .then((results) => {
         onResults(tab, results, performance.now() - startedAt);
         setStatus("idle");
       })
-      .catch(() => setStatus("error"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          setStatus("error");
+        }
+      });
+      
+      return () => controller.abort();
   }, [tab.id, tab.query, tab.results]);
 
   const results = tab.results ?? [];
