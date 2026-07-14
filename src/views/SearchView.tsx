@@ -48,8 +48,8 @@ export default function SearchView({ tab, onResults }: SearchViewProps) {
           setStatus("error");
         }
       });
-      
-      return () => controller.abort();
+
+    return () => controller.abort();
   }, [tab.id, tab.query, tab.results]);
 
   const results = tab.results ?? [];

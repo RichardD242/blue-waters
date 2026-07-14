@@ -36,7 +36,7 @@ function readActiveId(tabs: Tab[]): string {
 }
 
 export function useTabs() {
-    const [tabs, setTabs] = useState<Tab[]>(readTabs());
+    const [tabs, setTabs] = useState<Tab[]>(() => readTabs());
     const [activeId, setActiveId] = useState<string>(() => readActiveId(tabs));
 
     useEffect(() => {
