@@ -63,24 +63,26 @@ export default function BrowserShell({ lock }: BrowserShellProps) {
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-slate-900">
       <TabBar tabs={tabs} activeId={activeTab.id} onSelect={setActiveId} onClose={closeTab} onNew={() => openTab("home")} />
-      <div className="flex items-center gap-3 border-b border-slate-100 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
-        <button type="button" onClick={goHome} className="shrink-0">
-          <img src="/bluewaterslogo.png" alt="home" className="h-6 w-6" />
-        </button>
-        <AddressBar
-          value={activeTab.mode === "site" ? activeTab.url : activeTab.query}
-          history={history}
-          onSearch={runSearch}
-          onVisit={runVisit}
-        />
-        <button
-          type="button"
-          onClick={goHistory}
-          aria-label="history"
-          className="shrink-0 rounded-full border border-slate-200 p-2 text-slate-500 transition-colors duration-150 hover:border-[#2a3ce4] hover:text-[#2a3ce4] dark:border-slate-700 dark:text-slate-400"
-        >
-          <History size={16} />
-        </button>
+      <div className="flex items-center justify-center border-b border-slate-100 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex w-full max-w-2xl items-center gap-3">
+          <button type="button" onClick={goHome} className="shrink-0">
+            <img src="/bluewaterslogo.png" alt="home" className="h-6 w-6" />
+          </button>
+          <AddressBar
+            value={activeTab.mode === "site" ? activeTab.url : activeTab.query}
+            history={history}
+            onSearch={runSearch}
+            onVisit={runVisit}
+          />
+          <button
+            type="button"
+            onClick={goHistory}
+            aria-label="history"
+            className="shrink-0 rounded-full border border-slate-200 p-2 text-slate-500 transition-colors duration-150 hover:border-[#2a3ce4] hover:text-[#2a3ce4] dark:border-slate-700 dark:text-slate-400"
+          >
+            <History size={16} />
+          </button>
+        </div>
       </div>
       {activeTab.mode === "home" && <HomeView dark={dark} onToggleDark={toggle} onSearch={runSearch} lock={lock} />}
       {activeTab.mode === "search" && <SearchView tab={activeTab} onResults={saveResults} />}

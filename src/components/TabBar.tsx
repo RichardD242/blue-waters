@@ -1,5 +1,6 @@
 import { Plus, X, Globe, Search as SearchIcon, Home as HomeIcon, Clock } from "lucide-react";
 import type { Tab } from "../types.ts";
+import { MAX_TABS } from "../hooks/useTabs.ts";
 
 interface TabBarProps {
   tabs: Tab[];
@@ -17,8 +18,9 @@ function iconFor(tab: Tab) {
 }
 
 export default function TabBar({ tabs, activeId, onSelect, onClose, onNew }: TabBarProps) {
+  const atMax = tabs.length >= MAX_TABS;
   return (
-    <div className="flex w-full items-center gap-1 overflow-x-auto border-b border-slate-100 bg-slate-50 px-2 pt-2 dark:border-slate-800 dark:bg-slate-900">
+    <div className="flex w-full items-center gap-1 border-b border-slate-100 bg-slate-50 px-2 pt-2 dark:border-slate-800 dark:bg-slate-900">
       {tabs.map((tab) => {
         const Icon = iconFor(tab);
         const active = tab.id === activeId;
@@ -29,8 +31,8 @@ export default function TabBar({ tabs, activeId, onSelect, onClose, onNew }: Tab
             onClick={() => onSelect(tab.id)}
             className={
               active
-                ? "flex max-w-48 shrink-0 items-center gap-2 rounded-t-xl border border-b-0 border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-                : "flex max-w-48 shrink-0 items-center gap-2 rounded-t-xl px-3 py-2 text-sm text-slate-400 hover:bg-slate-100 dark:text-slate-500 dark:hover:bg-slate-800/60"
+                ? "flex min-w-0 max-w-48 flex-1 items-center gap-2 rounded-t-xl border border-b-0 border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                : "flex min-w-0 max-w-48 flex-1 items-center gap-2 rounded-t-xl px-3 py-2 text-sm text-slate-400 hover:bg-slate-100 dark:text-slate-500 dark:hover:bg-slate-800/60"
             }
           >
             <Icon size={13} className="shrink-0" />
@@ -42,7 +44,7 @@ export default function TabBar({ tabs, activeId, onSelect, onClose, onNew }: Tab
                 event.stopPropagation();
                 onClose(tab.id);
               }}
-              className="ml-1 shrink-0 rounded-full p-0.5 text-slate-300 hover:bg-slate-200 hover:text-slate-600 dark:text-slate-600 dark:hover:bg-slate-700"
+              className="ml-auto shrink-0 rounded-full p-0.5 text-slate-300 hover:bg-slate-200 hover:text-slate-600 dark:text-slate-600 dark:hover:bg-slate-700"
             >
               <X size={12} />
             </span>
@@ -52,8 +54,9 @@ export default function TabBar({ tabs, activeId, onSelect, onClose, onNew }: Tab
       <button
         type="button"
         onClick={onNew}
+        disabled={atMax}
         aria-label="new tab"
-        className="ml-1 flex shrink-0 items-center justify-center rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-[#2a3ce4] dark:text-slate-500 dark:hover:bg-slate-800"
+        className="ml-1 flex shrink-0 items-center justify-center rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-[#2a3ce4] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 dark:text-slate-500 dark:hover:bg-slate-800"
       >
         <Plus size={16} />
       </button>

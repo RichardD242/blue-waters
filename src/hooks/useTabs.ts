@@ -3,6 +3,7 @@ import type { Tab, TabMode } from "../types.ts";
 
 const TABS_KEY = "bluewaters:tabs";
 const ACTIVE_KEY = "bluewaters:active-tab";
+export const MAX_TABS = 8;
 
 function createTab(mode: TabMode = "home"): Tab {
     return {
@@ -48,6 +49,9 @@ export function useTabs() {
     }, [activeId]);
 
     function openTab(mode: TabMode = "home") {
+        if (tabs.length >= MAX_TABS) {
+            return activeId;
+        }
         const tab = createTab(mode);
         setTabs((current) => [...current, tab]);
         setActiveId(tab.id);
