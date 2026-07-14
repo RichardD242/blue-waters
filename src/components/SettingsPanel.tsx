@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Lock, LockOpen, Moon, Settings, Sun, UserX } from "lucide-react";
+import { Lock, LockOpen, Moon, Settings, Sun, Trash2, UserX } from "lucide-react";
 import type { LockControls } from "../hooks/useLock.ts";
 
 interface SettingsPanelProps {
@@ -32,6 +32,22 @@ export default function SettingsPanel({ dark, onToggleDark, lock, onClearName }:
     setConfirm("");
     setError("");
     setEditing(false);
+  }
+
+  function handleRemovePasscode() {
+    if (window.confirm("remove your password?")) {
+      lock.removePasscode();
+    }
+  }
+
+  function handleClearAllData() {
+    if (!window.confirm("delete all data? this cannot be undone")) {
+      return;
+    }
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith("bluewaters:"))
+      .forEach((key) => localStorage.removeItem(key));
+    window.location.reload();
   }
 
   return (
@@ -104,7 +120,7 @@ export default function SettingsPanel({ dark, onToggleDark, lock, onClearName }:
               </button>
               <button
                 type="button"
-                onClick={lock.removePasscode}
+                onClick={handleRemovePasscode}
                 className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700"
               >
                 <LockOpen size={16} />
@@ -112,6 +128,15 @@ export default function SettingsPanel({ dark, onToggleDark, lock, onClearName }:
               </button>
             </>
           )}
+
+          <button
+            type="button"
+            onClick={handleClearAllData}
+            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-red-500 transition-colors duration-150 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40"
+          >
+            <Trash2 size={16} />
+            clear all data
+          </button>
 
           {editing && (
             <form onSubmit={handleSetPasscode} className="flex flex-col gap-2 px-3 py-2">
